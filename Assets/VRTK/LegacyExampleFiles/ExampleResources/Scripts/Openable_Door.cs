@@ -22,6 +22,7 @@
             SetDoorRotation(usingObject.transform.position);
             SetRotation();
             open = !open;
+            Debug.Log("startUsing");
         }
 
         protected void Start()
@@ -29,6 +30,7 @@
             defaultRotation = transform.eulerAngles;
             SetRotation();
             sideFlip = (flipped ? 1 : -1);
+            Debug.Log("Start");
         }
 
         protected override void Update()
@@ -37,10 +39,12 @@
             if (open)
             {
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(openRotation), Time.deltaTime * smooth);
+                Debug.Log("Update A");
             }
             else
             {
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(defaultRotation), Time.deltaTime * smooth);
+                Debug.Log("Update B");
             }
         }
 

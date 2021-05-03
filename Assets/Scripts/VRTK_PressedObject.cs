@@ -17,7 +17,7 @@
         {
             base.StartUsing(usingObject);
             //Manager.GetComponent<EventHandler>().buttonPressed(name);
-            if (GetComponent<NamaPeneliti>() != null)
+            if (GetComponent<NodeVariable>() != null)
             {
                 if (CompareTag("ListPenelitiAbjad"))
                 {
@@ -28,14 +28,14 @@
                 }
                 else if(CompareTag("ListPenelitiInisial"))
                 {
-                    string kode = GetComponent<NamaPeneliti>().kode_peneliti;
-                    Debug.Log(kode + " <- namapeneliti");
+                    string kode = GetComponent<NodeVariable>().kode_peneliti;
+                    Debug.Log(kode + " <- NodeVariable");
                     Manager.GetComponent<Manager>().getDetailPenelitiITS(kode);
                     //Manager.GetComponent<Manager>().getDetailPenelitiITS
                 }
                 else if(CompareTag("ListPenelitiFakultas"))
                 {
-                    string kode = GetComponent<NamaPeneliti>().kode_peneliti;
+                    string kode = GetComponent<NodeVariable>().kode_peneliti;
                     Debug.Log(kode + " <- fakultaspeneliti");
                     Manager.GetComponent<Manager>().getPenelitiDepartemenITS(kode);
                 }
@@ -110,7 +110,7 @@
             base.StartTouching(usingObject);
             Debug.Log(name + " <- touched");
             
-            if (gameObject.GetComponent<NamaPeneliti>() != null)
+            if (gameObject.GetComponent<NodeVariable>() != null)
             {
                 if (CompareTag("ListPenelitiAbjad"))
                 {
@@ -164,7 +164,7 @@
         public void Start()
         {
             Manager = GameObject.Find("Manager");
-            Debug.Log("start");
+            //Debug.Log("start");
         }
 
         // Update is called once per frame

@@ -5,9 +5,9 @@ using UnityEngine;
 public class FloatingSphere : MonoBehaviour
 {
     // User Inputs
-    public float degreesPerSecond = 15.0f;
-    public float amplitude = 0.5f;
-    public float frequency = 0.1f;
+    public float degreesPerSecond = 10.0f;
+    public float amplitude = 0.002f;
+    public float frequency = 0.2f;
     public int orientation = 1;
 
     // Position Storage Variables
@@ -26,7 +26,15 @@ public class FloatingSphere : MonoBehaviour
     {
         // Float up/down with a Sin()
         tempPos = posOffset;
-        tempPos.y += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * amplitude;
+
+        if(orientation < 0)
+        {
+            tempPos.y += Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * amplitude;
+        }
+        else
+        {
+            tempPos.y -= Mathf.Sin(Time.fixedTime * Mathf.PI * frequency) * amplitude;
+        }
 
         transform.position = tempPos;
     }

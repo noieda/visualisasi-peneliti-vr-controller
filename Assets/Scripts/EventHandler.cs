@@ -54,7 +54,23 @@ public class EventHandler : MonoBehaviour
     public Material InisialMaterial;
     public Material FakultasMaterial;
     public Material DepartemenMaterial;
+    public Material F_SCIENTICS;
+    public Material F_INDSYS;
+    public Material F_CIVPLAN;
+    public Material F_MARTECH;
+    public Material F_ELECTICS;
+    public Material F_CREABIZ;
+    public Material F_VOCATIONS;
 
+    [Header("Animation")]
+    public IEnumerator animate;
+    public Vector3 initialScale;
+    public Quaternion InitialRotation;
+
+    public Vector3 endMarker = new Vector3(5.47f, -0.57f, -11);
+    public Vector3 endMarkerLegend = new Vector3(-6.8256f, -0.09f, -10.991f);
+    public Vector3 endScaleChart = new Vector3(13.08183f, 7.320017f, 1);
+    public Vector3 endScaleLegend = new Vector3(9.951063f, 6.884685f, 0.4520478f);
 
     [Header("Detail")]
     // detail peneliti
@@ -91,7 +107,7 @@ public class EventHandler : MonoBehaviour
         }
         //Dashboard();
         //getDetailPenelitiITS(4987.ToString());
-        //getPenelitiAbjadITS();
+        getPenelitiAbjadITS();
         //getPenelitiFakultasITS();
         //Debug.Log(URL);
     }
@@ -175,26 +191,31 @@ public class EventHandler : MonoBehaviour
                     //    dababy.text = NodeAbjadPeneliti.name;
                     //}
 
-                    var orientation = NodeAbjadPeneliti.GetComponent<FloatingSphere>().orientation;
+                    //var orientation = NodeAbjadPeneliti.GetComponent<FloatingSphere>().orientation;
+                    //Debug.Log(test);
+
                     int test = Random.Range(0, 2);
-                    
-                    if (test < 1) { test = -1; }
-                    orientation = orientation * test;
+                    if (test == 0) { NodeAbjadPeneliti.GetComponent<FloatingSphere>().orientation = -1; }
 
-                    NodeAbjadPeneliti.transform.SetParent(parentPenelitiScatter.transform);
-                    NodeAbjadPeneliti.transform.localPosition = new Vector3(Random.Range(-3.0f, 3.0f), 0, Random.Range(-3.0f, 3.0f));
-                    NodeAbjadPeneliti.transform.localScale = new Vector3(size, size, size);
-                    NodeAbjadPeneliti.GetComponent<Renderer>().material = AbjadMaterial;
-
-                    NamaPeneliti tambahan = NodeAbjadPeneliti.AddComponent<NamaPeneliti>();
+                    NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
                     tambahan.nama = data.inisial;
                     tambahan.jumlah = jumlah;
-                    tambahan.ukuran = size;
+                    //tambahan.ukuran = size;
+                    tambahan.ukuran2 = new Vector3(size, size, size);
+
+
+                    spawnNode(NodeAbjadPeneliti, size);
 
                     //transform.SetParent(ParentTransform, false);
                     //NodeAbjadPeneliti.transform.SetParent(parentPenelitiScatter.transform, false);
                 }
                 listPeneliti = GameObject.FindGameObjectsWithTag("ListPenelitiAbjad");
+                foreach(GameObject node in listPeneliti)
+                {
+                    animate = animateNode(node, node.GetComponent<NodeVariable>().ukuran2, endMarker, InitialRotation, 0) ;
+                    StartCoroutine(animate);
+                    //public IEnumerator animateNode(GameObject node, Vector3 nodeScale, Vector3 nodeLocation , Quaternion nodeRotation ,int mode = 0)
+                }
             }, error => {
                 if (error != "")
                 {
@@ -232,10 +253,10 @@ public class EventHandler : MonoBehaviour
 
         var peekNodeNama = peek.GetChild(1).GetComponent<TMP_Text>();
         var peekNodeJumlah = peek.GetChild(3).GetComponent<TMP_Text>();
-        var namaPeneliti = NodePeneliti.GetComponent<NamaPeneliti>().nama;
-        var jumlahPublikasi = NodePeneliti.GetComponent<NamaPeneliti>().jumlah;
+        var NodeVariable = NodePeneliti.GetComponent<NodeVariable>().nama;
+        var jumlahPublikasi = NodePeneliti.GetComponent<NodeVariable>().jumlah;
 
-        peekNodeNama.text = namaPeneliti;
+        peekNodeNama.text = NodeVariable;
         peekNodeJumlah.text = jumlahPublikasi.ToString();
     }
 
@@ -260,16 +281,17 @@ public class EventHandler : MonoBehaviour
                     //float sizeCoef = 0.05f;
                     float size = jumlah * sizeCoef;
                     NodeAbjadPeneliti.tag = "ListPenelitiInisial";
-                    NodeAbjadPeneliti.transform.SetParent(parentPenelitiScatter.transform);
-                    NodeAbjadPeneliti.transform.localPosition = new Vector3(Random.Range(-3.0f, 3.0f), 0, Random.Range(-3.0f, 3.0f));
-                    NodeAbjadPeneliti.transform.localScale = new Vector3(size, size, size);
-                    NodeAbjadPeneliti.GetComponent<Renderer>().material = InisialMaterial;
-                    //NodeAbjadPeneliti.AddComponent<NamaPeneliti>().nama = data.nama;
-                    NamaPeneliti tambahan = NodeAbjadPeneliti.AddComponent<NamaPeneliti>();
+
+                    NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
                     tambahan.kode_peneliti = data.kode_dosen;
                     tambahan.nama = data.nama;
                     tambahan.jumlah = jumlah;
                     tambahan.ukuran = size;
+
+                    spawnNode(NodeAbjadPeneliti, size);
+
+                    //NodeAbjadPeneliti.AddComponent<NodeVariable>().nama = data.nama;
+                    
                 }
                 listPeneliti = GameObject.FindGameObjectsWithTag("ListPenelitiInisial");
 
@@ -308,15 +330,12 @@ public class EventHandler : MonoBehaviour
                     //float sizeCoef = 0.005f;
                     float size = jumlah * sizeCoef;
 
-                    NodeAbjadPeneliti.transform.SetParent(parentPenelitiScatter.transform);
-                    NodeAbjadPeneliti.transform.localPosition = new Vector3(Random.Range(-3.0f, 3.0f), 0, Random.Range(-3.0f, 3.0f));
-                    NodeAbjadPeneliti.transform.localScale = new Vector3(size, size, size);
-                    NodeAbjadPeneliti.GetComponent<Renderer>().material = FakultasMaterial;
-
-                    NamaPeneliti tambahan = NodeAbjadPeneliti.AddComponent<NamaPeneliti>();
+                    NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
                     tambahan.kode_peneliti = data.kode_fakultas.ToString();
                     tambahan.jumlah = jumlah;
                     tambahan.ukuran = size;
+
+                    spawnNode(NodeAbjadPeneliti, size);
 
                     //transform.SetParent(ParentTransform, false);
                     //NodeAbjadPeneliti.transform.SetParent(parentPenelitiScatter.transform, false);
@@ -364,15 +383,14 @@ public class EventHandler : MonoBehaviour
                     //    dababy.text = NodeAbjadPeneliti.name;
                     //}
 
-                    NodeAbjadPeneliti.transform.SetParent(parentPenelitiScatter.transform);
-                    NodeAbjadPeneliti.transform.localPosition = new Vector3(Random.Range(-3.0f, 3.0f), 0, Random.Range(-3.0f, 3.0f));
-                    NodeAbjadPeneliti.transform.localScale = new Vector3(size, size, size);
-                    NodeAbjadPeneliti.GetComponent<Renderer>().material = DepartemenMaterial;
-
-                    NamaPeneliti tambahan = NodeAbjadPeneliti.AddComponent<NamaPeneliti>();
-                    //tambahan.nama = data.nama_fakultas;
+                    NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
+                    tambahan.kode_peneliti = data.kode_fakultas.ToString();
                     tambahan.jumlah = jumlah;
                     tambahan.ukuran = size;
+
+                    spawnNode(NodeAbjadPeneliti, size);
+
+                    
 
                     //transform.SetParent(ParentTransform, false);
                     //NodeAbjadPeneliti.transform.SetParent(parentPenelitiScatter.transform, false);
@@ -389,6 +407,99 @@ public class EventHandler : MonoBehaviour
             ));
         }
         
+    }
+
+    public void spawnNode(GameObject node, float size)
+    {
+        int test = Random.Range(0, 2);
+        if (test == 0) { node.GetComponent<FloatingSphere>().orientation = -1; }
+
+        node.transform.SetParent(parentPenelitiScatter.transform);
+        node.transform.localPosition = new Vector3(Random.Range(-3.0f, 3.0f), 0, Random.Range(-3.0f, 3.0f));
+        node.transform.localScale = new Vector3(size, size, size);
+        //node.transform.localScale = new Vector3(0f, 0f, 0f);
+
+        if (node.CompareTag("ListPenelitiAbjad"))
+        {
+            node.GetComponent<Renderer>().material = AbjadMaterial;
+
+        }
+        else if (node.CompareTag("ListPenelitiInisial"))
+        {
+            node.GetComponent<Renderer>().material = InisialMaterial;
+        }
+        else if (node.CompareTag("ListPenelitiFakultas") || node.CompareTag("ListPenelitiDepartemen"))
+        {
+            switch (int.Parse(node.GetComponent<NodeVariable>().kode_peneliti))
+            {
+                case 1:
+                    
+                    node.GetComponent<Renderer>().material = F_SCIENTICS;
+                    break;
+                case 2:
+                    node.GetComponent<Renderer>().material = F_INDSYS;
+                    break;
+                case 3:
+                    node.GetComponent<Renderer>().material = F_CIVPLAN;
+                    break;
+                case 4:
+                    node.GetComponent<Renderer>().material = F_MARTECH;
+                    break;
+                case 5:
+                    node.GetComponent<Renderer>().material = F_ELECTICS;
+                    break;
+                case 6:
+                    node.GetComponent<Renderer>().material = F_CREABIZ;
+                    break;
+                case 7:
+                    node.GetComponent<Renderer>().material = F_VOCATIONS;
+                    break;
+                default:
+                    node.GetComponent<Renderer>().material = AbjadMaterial;
+                    break;
+
+            }
+        }
+        else 
+        {
+
+        }
+
+        //node.GetComponent<Renderer>().material = AbjadMaterial;
+    }
+
+    public IEnumerator animateNode(GameObject node, Vector3 nodeScale, Vector3 nodeLocation , Quaternion nodeRotation ,int mode = 0)
+    {
+        float timeElapsed = 0f;
+        float waitTime = 10f;
+        if (mode == 0) // dari kecil ke membesar
+        {
+            while (node.transform.localScale.x < nodeScale.x)
+            {
+                node.transform.localScale = Vector3.Lerp(node.transform.localScale, nodeScale, (timeElapsed / waitTime));
+
+                timeElapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            node.transform.localScale = nodeScale;
+
+            yield return null;
+        }
+        else // dari besar ke mengecil
+        {
+            while (node.transform.localScale.x > nodeScale.x)
+            {
+                node.transform.localScale = Vector3.Lerp(node.transform.localScale, nodeScale, (timeElapsed / waitTime));
+
+                timeElapsed += Time.deltaTime;
+                yield return null;
+            }
+
+            node.transform.localScale = nodeScale;
+
+            yield return null;
+        }
     }
 
     public void resizeNode(float zoom)
@@ -413,6 +524,11 @@ public class EventHandler : MonoBehaviour
             }
         }
         
+    }
+
+    void animateNode()
+    {
+
     }
 
     // detailPenelitiITS adalah data yang ditampilkan ketika melihat salah satu peneliti ITS
@@ -440,7 +556,7 @@ public class EventHandler : MonoBehaviour
 
     void detailPenelitiITS(RawData rawdata)
     {
-        //namaPeneliti.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[0].journals.ToString();
+        //NodeVariable.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[0].journals.ToString();
         namaPeneliti.text = rawdata.data[0].detail_peneliti[0].nama;
         fakultasPeneliti.text = rawdata.data[0].detail_peneliti[0].fakultas;
         departemenPeneliti.text = rawdata.data[0].detail_peneliti[0].departemen;

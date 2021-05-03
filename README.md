@@ -5,6 +5,8 @@ Unity ver : 2019.4.17f1
   
 TODO :  
   
- - Membuat model ruangan lebih imersif dengan blender
- - Membuat bot python sebagai *web scrapper* situs target
- - Menghubungkan bot python ke Unity
+ - membuat animasi agar nodes peneliti tidak statis
+ - membuat animasi untuk setiap perpindahan mode nodes ( dari Abjad ke Inisial )
+ - menyesuaikan warna kode untuk setiap fakultas pada bagian fakultas
+ - menyesuaikan warna kode untuk setiap departemen yang dinaungi oleh fakultas yang sama
+ - membuat nodes berdasarkan temp_dasar_scopus

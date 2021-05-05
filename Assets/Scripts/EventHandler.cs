@@ -63,6 +63,7 @@ public class EventHandler : MonoBehaviour
     public Material F_VOCATIONS;
 
     [Header("Animation")]
+    bool destroyedStatus = false;
     public IEnumerator animate;
     public Vector3 initialScale;
     public Quaternion InitialRotation;
@@ -198,11 +199,11 @@ public class EventHandler : MonoBehaviour
                     if (test == 0) { NodeAbjadPeneliti.GetComponent<FloatingSphere>().orientation = -1; }
 
                     NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
+                    tambahan.kode_peneliti = data.inisial;
                     tambahan.nama = data.inisial;
                     tambahan.jumlah = jumlah;
                     //tambahan.ukuran = size;
                     tambahan.ukuran2 = new Vector3(size, size, size);
-
 
                     spawnNode(NodeAbjadPeneliti, size);
 
@@ -214,7 +215,6 @@ public class EventHandler : MonoBehaviour
                 {
                     animate = animateNode(node, node.GetComponent<NodeVariable>().ukuran2, endMarker, InitialRotation, 0) ;
                     StartCoroutine(animate);
-                    //public IEnumerator animateNode(GameObject node, Vector3 nodeScale, Vector3 nodeLocation , Quaternion nodeRotation ,int mode = 0)
                 }
             }, error => {
                 if (error != "")
@@ -242,14 +242,20 @@ public class EventHandler : MonoBehaviour
         var peekNode = peekNodePeneliti.transform;
         //float nodeDistance = NodePeneliti.transform.localScale.y;
         peekNode.name = "peekPeneliti";
-        peekNode.SetParent(NodePeneliti.transform);
+        //peekNode.SetParent(NodePeneliti.transform);
+
+        var peekpoint = GameObject.Find("HoverPeek").transform;
+        if (peekpoint != null)
+        {
+            peekNode.SetParent(peekpoint);
+
+        }
 
         var peek = peekNode.GetChild(0);
 
         peekNodePeneliti.transform.localPosition = new Vector3(0, -0f, 0);
         peekNodePeneliti.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
         peekNodePeneliti.transform.LookAt(playerHead.transform);
-
 
         var peekNodeNama = peek.GetChild(1).GetComponent<TMP_Text>();
         var peekNodeJumlah = peek.GetChild(3).GetComponent<TMP_Text>();
@@ -287,6 +293,7 @@ public class EventHandler : MonoBehaviour
                     tambahan.nama = data.nama;
                     tambahan.jumlah = jumlah;
                     tambahan.ukuran = size;
+                    tambahan.ukuran2 = new Vector3(size, size, size);
 
                     spawnNode(NodeAbjadPeneliti, size);
 
@@ -294,7 +301,11 @@ public class EventHandler : MonoBehaviour
                     
                 }
                 listPeneliti = GameObject.FindGameObjectsWithTag("ListPenelitiInisial");
-
+                foreach (GameObject node in listPeneliti)
+                {
+                    animate = animateNode(node, node.GetComponent<NodeVariable>().ukuran2, endMarker, InitialRotation, 0);
+                    StartCoroutine(animate);
+                }
             }, error => {
                 if (error != "")
                 {
@@ -334,6 +345,8 @@ public class EventHandler : MonoBehaviour
                     tambahan.kode_peneliti = data.kode_fakultas.ToString();
                     tambahan.jumlah = jumlah;
                     tambahan.ukuran = size;
+                    tambahan.ukuran2 = new Vector3(size, size, size);
+
 
                     spawnNode(NodeAbjadPeneliti, size);
 
@@ -341,6 +354,11 @@ public class EventHandler : MonoBehaviour
                     //NodeAbjadPeneliti.transform.SetParent(parentPenelitiScatter.transform, false);
                 }
                 listPeneliti = GameObject.FindGameObjectsWithTag("ListPenelitiFakultas");
+                foreach (GameObject node in listPeneliti)
+                {
+                    animate = animateNode(node, node.GetComponent<NodeVariable>().ukuran2, endMarker, InitialRotation, 0);
+                    StartCoroutine(animate);
+                }
             }, error => {
                 if (error != "")
                 {
@@ -387,6 +405,7 @@ public class EventHandler : MonoBehaviour
                     tambahan.kode_peneliti = data.kode_fakultas.ToString();
                     tambahan.jumlah = jumlah;
                     tambahan.ukuran = size;
+                    tambahan.ukuran2 = new Vector3(size, size, size);
 
                     spawnNode(NodeAbjadPeneliti, size);
 
@@ -396,6 +415,11 @@ public class EventHandler : MonoBehaviour
                     //NodeAbjadPeneliti.transform.SetParent(parentPenelitiScatter.transform, false);
                 }
                 listPeneliti = GameObject.FindGameObjectsWithTag("ListPenelitiDepartemen");
+                foreach (GameObject node in listPeneliti)
+                {
+                    animate = animateNode(node, node.GetComponent<NodeVariable>().ukuran2, endMarker, InitialRotation, 0);
+                    StartCoroutine(animate);
+                }
             }, error => {
                 if (error != "")
                 {
@@ -416,8 +440,8 @@ public class EventHandler : MonoBehaviour
 
         node.transform.SetParent(parentPenelitiScatter.transform);
         node.transform.localPosition = new Vector3(Random.Range(-3.0f, 3.0f), 0, Random.Range(-3.0f, 3.0f));
-        node.transform.localScale = new Vector3(size, size, size);
-        //node.transform.localScale = new Vector3(0f, 0f, 0f);
+        //node.transform.localScale = new Vector3(size, size, size);
+        node.transform.localScale = new Vector3(0f, 0f, 0f);
 
         if (node.CompareTag("ListPenelitiAbjad"))
         {
@@ -471,7 +495,7 @@ public class EventHandler : MonoBehaviour
     public IEnumerator animateNode(GameObject node, Vector3 nodeScale, Vector3 nodeLocation , Quaternion nodeRotation ,int mode = 0)
     {
         float timeElapsed = 0f;
-        float waitTime = 10f;
+        float waitTime = 2f;
         if (mode == 0) // dari kecil ke membesar
         {
             while (node.transform.localScale.x < nodeScale.x)
@@ -497,7 +521,7 @@ public class EventHandler : MonoBehaviour
             }
 
             node.transform.localScale = nodeScale;
-
+            destroyedStatus = true;
             yield return null;
         }
     }
@@ -515,20 +539,24 @@ public class EventHandler : MonoBehaviour
     }    
     public void flushNode()
     {
-        //Debug.Log(listPeneliti.Length);
         if(listPeneliti != null)
         {
             foreach (GameObject node in listPeneliti)
             {
+                //animate = animateNode(node, new Vector3(0, 0, 0), endMarker, InitialRotation, 1);
+                //StartCoroutine(animate);
                 Destroy(node);
             }
+
+            //if (destroyedStatus == true)
+            //{
+            //    foreach (GameObject node in listPeneliti)
+            //    {
+            //        Destroy(node);
+            //    }
+            //}
         }
         
-    }
-
-    void animateNode()
-    {
-
     }
 
     // detailPenelitiITS adalah data yang ditampilkan ketika melihat salah satu peneliti ITS

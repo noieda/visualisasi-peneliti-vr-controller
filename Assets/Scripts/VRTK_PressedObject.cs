@@ -6,12 +6,13 @@
     public class VRTK_PressedObject : VRTK_InteractableObject
     {
         public GameObject Manager;
-        public GameObject DashboardButtonChild1;
+        public GameObject ButtonDisplay;
         bool DBA = false; // Dashboard Button Active
         bool PBA = false; // Peneliti Button Active
         bool ABA = false; // Abjad Button Active
         bool FBA = false; // Fakultas Button Active
         bool TBA = false; // Table Button Active
+        bool OBA = false; // Option Button Active
 
         public override void StartUsing(VRTK_InteractUse usingObject)
         {
@@ -21,17 +22,18 @@
             {
                 if (CompareTag("ListPenelitiAbjad"))
                 {
-                    Debug.Log("lpa " + name);
-                    ///Manager.GetComponent<EventHandler>().buttonPressed(tag, name);
-                    Manager.GetComponent<Manager>().getPenelitiInisialITS(name);
+                    //Debug.Log("lpa " + name);
+                    //Manager.GetComponent<Manager>().getPenelitiInisialITS(name);
 
+                    string kode = GetComponent<NodeVariable>().kode_peneliti;
+                    Debug.Log(kode + " <- NodeVariable");
+                    Manager.GetComponent<Manager>().getPenelitiInisialITS(kode);
                 }
                 else if(CompareTag("ListPenelitiInisial"))
                 {
                     string kode = GetComponent<NodeVariable>().kode_peneliti;
                     Debug.Log(kode + " <- NodeVariable");
                     Manager.GetComponent<Manager>().getDetailPenelitiITS(kode);
-                    //Manager.GetComponent<Manager>().getDetailPenelitiITS
                 }
                 else if(CompareTag("ListPenelitiFakultas"))
                 {
@@ -54,7 +56,7 @@
                 {
                     Debug.Log("dashboard button");
                     DBA = !DBA;
-                    DashboardButtonChild1.SetActive(DBA);
+                    ButtonDisplay.SetActive(DBA);
                     Manager.GetComponent<EventHandler>().Dashboard();
                     Manager.GetComponent<Manager>().DashboardToggle();
                 }
@@ -62,7 +64,7 @@
                 {
                     Debug.Log("peneliti button");
                     PBA = !PBA;
-                    DashboardButtonChild1.SetActive(PBA);
+                    ButtonDisplay.SetActive(PBA);
                     Manager.GetComponent<Manager>().PenelitianToggle();
                 }
                 else if (name == "AbjadButton")
@@ -80,20 +82,25 @@
                 else if (name == "SizeUpButton")
                 {
                     Debug.Log("size up button");
-                    //Manager.GetComponent<Manager>().sizeCoef += 0.002f;
-                    Manager.GetComponent<Manager>().resizeNode(0.2f);
+                    Manager.GetComponent<Manager>().resizeNode(0.1f);
                 }
                 else if (name == "SizeDownButton")
                 {
                     Debug.Log("size down button");
-                    //Manager.GetComponent<Manager>().sizeCoef -= 0.002f;
-                    Manager.GetComponent<Manager>().resizeNode(-0.2f);
+                    Manager.GetComponent<Manager>().resizeNode(-0.1f);
                 }
                 else if (name == "NavigationButton")
                 {
                     Debug.Log("navigation button");
                     TBA = !TBA;
                     Manager.GetComponent<Manager>().TableButton.SetActive(TBA);
+                }
+                else if (name == "OptionButton")
+                {
+                    Debug.Log("option button");
+                    OBA = !OBA;
+                    ButtonDisplay.SetActive(OBA);
+                    //ButtonDisplay.GetComponentInChildren;
                 }
                 else
                 {

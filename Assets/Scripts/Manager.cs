@@ -34,11 +34,13 @@ public class Manager : EventHandler
         configPanel.SetActive(false);
     }
 
+    /*
     // Update is called once per frame
     void Update()
     {
         
     }
+    */
 
     public void DashboardToggle()
     {
@@ -54,5 +56,23 @@ public class Manager : EventHandler
         DetailPenelitiBar.SetActive(detPenelitiStatus);
 
         Debug.Log("peneliti button pressed <- eventHandler");
-    } 
+    }
+    public void OptionToggle()
+    {
+        detOptionStatus = !detOptionStatus;
+        OptionBar.SetActive(detOptionStatus);
+
+        Debug.Log("option button pressed <- eventHandler");
+
+    }
+    public void OpenResearcherDetail()
+    {
+        DetailPenelitiBar.SetActive(true);
+    }
+
+    public void CloseResearcherDetail()
+    {
+        //Debug.Log("akrif");
+        DetailPenelitiBar.SetActive(false);
+    }
 }

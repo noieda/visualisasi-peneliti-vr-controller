@@ -92,7 +92,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1780149958532002849}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -131,7 +131,7 @@ MonoBehaviour:
   touchHighlightColor: {r: 0, g: 0, b: 0, a: 0}
   usingState: 0
   Manager: {fileID: 0}
-  DashboardButtonChild1: {fileID: 0}
+  ButtonDisplay: {fileID: 0}
 --- !u!114 &2892192845039927797
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -165,8 +165,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   degreesPerSecond: 15
-  amplitude: 0.5
+  amplitude: 0.1
   frequency: 0.1
+  orientation: 1
 --- !u!1 &8007613465708894320
 GameObject:
   m_ObjectHideFlags: 0

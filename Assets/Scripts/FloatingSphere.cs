@@ -5,9 +5,9 @@ using UnityEngine;
 public class FloatingSphere : MonoBehaviour
 {
     // User Inputs
-    public float degreesPerSecond = 10.0f;
-    public float amplitude = 0.002f;
-    public float frequency = 0.2f;
+    public float degreesPerSecond = 1.0f;
+    public float amplitude = 0.1f;
+    public float frequency = 2.2f;
     public int orientation = 1;
 
     // Position Storage Variables

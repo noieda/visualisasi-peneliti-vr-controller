@@ -9,6 +9,12 @@ TagManager:
   - Button
   - ListPenelitiDepartemen
   - ListPenelitiInisial
+  - ListPenelitiDepartemenDetail
+  - ListGelar
+  - ListGelarDetail
+  - ListPublikasiFakultas
+  - ListPublikasiKataKunci
+  - ListKataKunciPeneliti
   layers:
   - Default
   - TransparentFX

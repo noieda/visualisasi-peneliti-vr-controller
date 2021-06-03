@@ -37,17 +37,24 @@ public class EventHandler : MonoBehaviour
     public bool dashboardStatus = false;
     bool dashboardRefreshed = false;
 
-    [Header("Peneliti Abjad-Fakultas")]
+    [Header("Pengaturan Node")]
     // peneliti ( secara umum )
     public GameObject parentPenelitiScatter;
     public GameObject NodePeneliti;
     public GameObject peekPeneliti;
     public float sizeCoef = 0.005f;
+    GameObject[] listPeneliti;
+    int transparency = 1;
+
+    [Header("bool data")]
     bool penelitiAbjadRefreshed = false;
     bool penelitiInisialRefreshed = false;
     bool penelitiFakultasRefreshed = false;
     bool penelitiDepartemenRefreshed = false;
-    GameObject[] listPeneliti;
+    bool penelitiGelarFakultasRefreshed = false;
+    bool penelitiGelarDepartemenRefreshed = false;
+    bool penelitiLabFakultasRefreshed = false;
+    bool penelitiLabDepartemenRefreshed = false;
 
     [Header("Material")]
     public Material AbjadMaterial;
@@ -61,9 +68,11 @@ public class EventHandler : MonoBehaviour
     public Material F_ELECTICS;
     public Material F_CREABIZ;
     public Material F_VOCATIONS;
+    public Material lessTransparentMaterial;
+    public Material normalTransparentMaterial;
+    public Material moreTransparentMaterial;
 
     [Header("Animation")]
-    bool destroyedStatus = false;
     public IEnumerator animate;
     public Vector3 initialScale;
     public Quaternion InitialRotation;
@@ -72,19 +81,33 @@ public class EventHandler : MonoBehaviour
     public Vector3 endMarkerLegend = new Vector3(-6.8256f, -0.09f, -10.991f);
     public Vector3 endScaleChart = new Vector3(13.08183f, 7.320017f, 1);
     public Vector3 endScaleLegend = new Vector3(9.951063f, 6.884685f, 0.4520478f);
+    bool destroyedStatus = false;
 
     [Header("Detail")]
     // detail peneliti
     
     public GameObject DetailPenelitiBar;
     public Text namaPeneliti;
+    public Text tanggalPeneliti;
     public Text fakultasPeneliti;
     public Text departemenPeneliti;
+    public Text jurnalPeneliti;
+    public Text konferensiPeneliti;
+    public Text bukuPeneliti;
+    public Text tesisPeneliti;
+    public Text patenPeneliti;
+    public Text penelitianPeneliti;
     public bool detPenelitiStatus = false;
 
     [Header("Tombol Navigasi")]
     public VRTK_InteractableObject tombolDashboard;
+    public VRTK_InteractObjectHighlighter highlightOption;
     public GameObject TableButton;
+
+    [Header("Pengaturan")]
+
+    public GameObject OptionBar;
+    public bool detOptionStatus = false;
 
     RequestHandler requestPeneliti = new RequestHandler();
 
@@ -108,7 +131,8 @@ public class EventHandler : MonoBehaviour
         }
         //Dashboard();
         //getDetailPenelitiITS(4987.ToString());
-        getPenelitiAbjadITS();
+        //getPenelitiAbjadITS();
+        //getPublikasiFakultas();
         //getPenelitiFakultasITS();
         //Debug.Log(URL);
     }
@@ -235,7 +259,7 @@ public class EventHandler : MonoBehaviour
 
     }
 
-    public void peekPenelitiAbjadITS(GameObject NodePeneliti)
+    public void peekNodePeneliti(GameObject NodePeneliti, string jenis="publikasi")
     {
         GameObject peekNodePeneliti = (GameObject)Instantiate(peekPeneliti);
         
@@ -258,9 +282,15 @@ public class EventHandler : MonoBehaviour
         peekNodePeneliti.transform.LookAt(playerHead.transform);
 
         var peekNodeNama = peek.GetChild(1).GetComponent<TMP_Text>();
+        var PeekNodeTitle = peek.GetChild(2).GetComponent<TMP_Text>();
         var peekNodeJumlah = peek.GetChild(3).GetComponent<TMP_Text>();
         var NodeVariable = NodePeneliti.GetComponent<NodeVariable>().nama;
         var jumlahPublikasi = NodePeneliti.GetComponent<NodeVariable>().jumlah;
+
+        if (jenis != "publikasi")
+        {
+            PeekNodeTitle.text = "Jumlah Peneliti";
+        }
 
         peekNodeNama.text = NodeVariable;
         peekNodeJumlah.text = jumlahPublikasi.ToString();
@@ -343,6 +373,7 @@ public class EventHandler : MonoBehaviour
 
                     NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
                     tambahan.kode_peneliti = data.kode_fakultas.ToString();
+                    tambahan.nama = data.nama_fakultas;
                     tambahan.jumlah = jumlah;
                     tambahan.ukuran = size;
                     tambahan.ukuran2 = new Vector3(size, size, size);
@@ -388,31 +419,20 @@ public class EventHandler : MonoBehaviour
                     GameObject NodeAbjadPeneliti = (GameObject)Instantiate(NodePeneliti);
                     NodeAbjadPeneliti.name = data.nama_departemen;
                     NodeAbjadPeneliti.tag = "ListPenelitiDepartemen";
-                    //int jumlah = data.total;
 
                     int jumlah = data.jumlah;
                     //float sizeCoef = 0.005f;
                     float size = jumlah * sizeCoef;
 
-                    //var namaTest = NodeAbjadPeneliti.transform;
-                    //var dababy = namaTest.GetChild(0).GetChild(0).GetComponent<TMP_Text>();
-                    //if (namaTest != null)
-                    //{
-                    //    dababy.text = NodeAbjadPeneliti.name;
-                    //}
 
                     NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
                     tambahan.kode_peneliti = data.kode_fakultas.ToString();
+                    tambahan.nama = data.nama_departemen;
                     tambahan.jumlah = jumlah;
                     tambahan.ukuran = size;
                     tambahan.ukuran2 = new Vector3(size, size, size);
 
                     spawnNode(NodeAbjadPeneliti, size);
-
-                    
-
-                    //transform.SetParent(ParentTransform, false);
-                    //NodeAbjadPeneliti.transform.SetParent(parentPenelitiScatter.transform, false);
                 }
                 listPeneliti = GameObject.FindGameObjectsWithTag("ListPenelitiDepartemen");
                 foreach (GameObject node in listPeneliti)
@@ -433,12 +453,323 @@ public class EventHandler : MonoBehaviour
         
     }
 
+    public void getPenelitiDepartemenDetailITS(string kode_departemen)
+    {
+        if (penelitiDepartemenRefreshed == false)
+        {
+            //penelitiDepartemenRefreshed = true;
+
+            flushNode();
+
+            requestPeneliti.URL = URL + "/peneliti?departemen=" + kode_departemen.ToString();
+            StartCoroutine(requestPeneliti.RequestData((result) => {
+                foreach (var data in result.data[0].nama_peneliti)
+                {
+
+                    GameObject NodeAbjadPeneliti = (GameObject)Instantiate(NodePeneliti);
+                    NodeAbjadPeneliti.name = data.nama;
+                    NodeAbjadPeneliti.tag = "ListPenelitiDepartemenDetail";
+
+                    int jumlah = data.jumlah;
+                    //float sizeCoef = 0.005f;
+                    float size = jumlah * sizeCoef;
+
+
+                    NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
+                    tambahan.kode_peneliti = data.kode_dosen.ToString();
+                    tambahan.nama = NodeAbjadPeneliti.name;
+                    tambahan.jumlah = jumlah;
+                    tambahan.ukuran = size;
+                    tambahan.ukuran2 = new Vector3(size, size, size);
+
+                    spawnNode(NodeAbjadPeneliti, size);
+                }
+                listPeneliti = GameObject.FindGameObjectsWithTag("ListPenelitiDepartemenDetail");
+                foreach (GameObject node in listPeneliti)
+                {
+                    animate = animateNode(node, node.GetComponent<NodeVariable>().ukuran2, endMarker, InitialRotation, 0);
+                    StartCoroutine(animate);
+                }
+            }, error => {
+                if (error != "")
+                {
+                    retryMessage.text = error;
+                    retry.SetActive(true);
+                    connectionMessagePanel.SetActive(false);
+                }
+            }
+            ));
+        }
+
+    }
+
+    public void getGelarPenelitiITS()
+    {
+        if (penelitiGelarFakultasRefreshed == false)
+        {
+            flushNode();
+
+            requestPeneliti.URL = URL + "/gelar?kode=none";
+            StartCoroutine(requestPeneliti.RequestData((result) => {
+                foreach (var data in result.data[0].gelar_peneliti)
+                {
+
+                    GameObject NodeAbjadPeneliti = (GameObject)Instantiate(NodePeneliti);
+                    NodeAbjadPeneliti.name = data.gelar;
+                    //Debug.Log(data.kode_fakultas);
+                    NodeAbjadPeneliti.tag = "ListGelar";
+                    //int jumlah = data.total;
+
+                    int jumlah = data.jumlah;
+                    //float sizeCoef = 0.005f;
+                    float size = jumlah * sizeCoef;
+
+                    NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
+                    tambahan.kode_peneliti = data.gelar.ToString();
+                    tambahan.nama = tambahan.kode_peneliti;
+                    tambahan.jumlah = jumlah;
+                    tambahan.ukuran = size;
+                    tambahan.ukuran2 = new Vector3(size, size, size);
+
+
+                    spawnNode(NodeAbjadPeneliti, size);
+
+                    //transform.SetParent(ParentTransform, false);
+                    //NodeAbjadPeneliti.transform.SetParent(parentPenelitiScatter.transform, false);
+                }
+                listPeneliti = GameObject.FindGameObjectsWithTag("ListGelar");
+                foreach (GameObject node in listPeneliti)
+                {
+                    animate = animateNode(node, node.GetComponent<NodeVariable>().ukuran2, endMarker, InitialRotation, 0);
+                    StartCoroutine(animate);
+                }
+            }, error => {
+                if (error != "")
+                {
+                    retryMessage.text = error;
+                    retry.SetActive(true);
+                    connectionMessagePanel.SetActive(false);
+                }
+            }
+            ));
+        }
+    }
+
+    public void getGelarPenelitiDetail(string kode)
+    {
+        if (penelitiGelarFakultasRefreshed == false)
+        {
+            flushNode();
+
+            requestPeneliti.URL = URL + "/gelar?kode="+kode;
+            StartCoroutine(requestPeneliti.RequestData((result) => {
+                foreach (var data in result.data[0].nama_peneliti)
+                {
+
+                    GameObject NodeAbjadPeneliti = (GameObject)Instantiate(NodePeneliti);
+                    NodeAbjadPeneliti.name = data.nama;
+                    //Debug.Log(data.kode_fakultas);
+                    NodeAbjadPeneliti.tag = "ListGelarDetail";
+                    //int jumlah = data.total;
+
+                    int jumlah = data.jumlah;
+                    //float sizeCoef = 0.005f;
+                    float size = jumlah * sizeCoef;
+
+                    NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
+                    tambahan.kode_peneliti = data.kode_dosen.ToString();
+                    tambahan.nama = NodeAbjadPeneliti.name;
+                    tambahan.jumlah = jumlah;
+                    tambahan.ukuran = size;
+                    tambahan.ukuran2 = new Vector3(size, size, size);
+
+
+                    spawnNode(NodeAbjadPeneliti, size);
+
+                    //transform.SetParent(ParentTransform, false);
+                    //NodeAbjadPeneliti.transform.SetParent(parentPenelitiScatter.transform, false);
+                }
+                listPeneliti = GameObject.FindGameObjectsWithTag("ListGelarDetail");
+                foreach (GameObject node in listPeneliti)
+                {
+                    animate = animateNode(node, node.GetComponent<NodeVariable>().ukuran2, endMarker, InitialRotation, 0);
+                    StartCoroutine(animate);
+                }
+            }, error => {
+                if (error != "")
+                {
+                    retryMessage.text = error;
+                    retry.SetActive(true);
+                    connectionMessagePanel.SetActive(false);
+                }
+            }
+            ));
+        }
+    }
+
+    public void getPublikasiFakultas()
+    {
+        if (penelitiLabFakultasRefreshed == false)
+        {
+            flushNode();
+
+            requestPeneliti.URL = URL + "/publikasi?fakultas=none";
+            StartCoroutine(requestPeneliti.RequestData((result) => {
+                foreach (var data in result.data[0].fakultas_peneliti)
+                {
+
+                    GameObject NodeAbjadPeneliti = (GameObject)Instantiate(NodePeneliti);
+                    NodeAbjadPeneliti.name = data.nama_fakultas;
+                    //Debug.Log(data.kode_fakultas);
+                    NodeAbjadPeneliti.tag = "ListPublikasiFakultas";
+                    //int jumlah = data.total;
+
+                    //jumlah disini adalah jumlah publikasi, bukan jumlah peneliti
+                    int jumlah = data.jumlah;
+                    //float sizeCoef = 0.005f;
+                    float size = jumlah * sizeCoef * 0.1f;
+
+                    NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
+                    tambahan.kode_peneliti = data.kode_fakultas.ToString();
+                    tambahan.nama = NodeAbjadPeneliti.name;
+                    tambahan.jumlah = jumlah;
+                    tambahan.ukuran = size;
+                    tambahan.ukuran2 = new Vector3(size, size, size);
+
+
+                    spawnNode(NodeAbjadPeneliti, size);
+
+                    //transform.SetParent(ParentTransform, false);
+                    //NodeAbjadPeneliti.transform.SetParent(parentPenelitiScatter.transform, false);
+                }
+                listPeneliti = GameObject.FindGameObjectsWithTag("ListPublikasiFakultas");
+                foreach (GameObject node in listPeneliti)
+                {
+                    animate = animateNode(node, node.GetComponent<NodeVariable>().ukuran2, endMarker, InitialRotation, 0);
+                    StartCoroutine(animate);
+                }
+            }, error => {
+                if (error != "")
+                {
+                    retryMessage.text = error;
+                    retry.SetActive(true);
+                    connectionMessagePanel.SetActive(false);
+                }
+            }
+            ));
+        }
+    }
+
+    public void getPublikasiKataKunci(string kode)
+    {
+        if(penelitiLabDepartemenRefreshed == false)
+        {
+            flushNode();
+
+            requestPeneliti.URL = URL + "/publikasi?fakultas=" + kode;
+            StartCoroutine(requestPeneliti.RequestData((result) => {
+                foreach (var data in result.data[0].fakultas_publikasi)
+                {
+
+                    GameObject NodeAbjadPeneliti = (GameObject)Instantiate(NodePeneliti);
+                    NodeAbjadPeneliti.name = data.kata_kunci;
+                    //Debug.Log(data.kode_fakultas);
+                    NodeAbjadPeneliti.tag = "ListPublikasiKataKunci";
+                    //int jumlah = data.total;
+
+                    int jumlah = int.Parse(data.df);
+                    //float sizeCoef = 0.005f;
+                    float size = jumlah * sizeCoef;
+
+                    NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
+                    tambahan.kode_peneliti = data.kode_fakultas.ToString();
+                    tambahan.nama = NodeAbjadPeneliti.name;
+                    tambahan.jumlah = jumlah;
+                    tambahan.ukuran = float.Parse(data.idf);
+                    tambahan.ukuran2 = new Vector3(size, size, size);
+
+
+                    spawnNode(NodeAbjadPeneliti, size);
+
+                    //transform.SetParent(ParentTransform, false);
+                    //NodeAbjadPeneliti.transform.SetParent(parentPenelitiScatter.transform, false);
+                }
+                listPeneliti = GameObject.FindGameObjectsWithTag("ListPublikasiKataKunci");
+                foreach (GameObject node in listPeneliti)
+                {
+                    animate = animateNode(node, node.GetComponent<NodeVariable>().ukuran2, endMarker, InitialRotation, 0);
+                    StartCoroutine(animate);
+                }
+            }, error => {
+                if (error != "")
+                {
+                    retryMessage.text = error;
+                    retry.SetActive(true);
+                    connectionMessagePanel.SetActive(false);
+                }
+            }
+            ));
+        }
+    }
+
+    public void getKataKunciPeneliti(string fakultas, string katakunci)
+    {
+        if (penelitiLabDepartemenRefreshed == false)
+        {
+            flushNode();
+
+            requestPeneliti.URL = URL + "/publikasi?fakultas=" + fakultas + "&katakunci=" + katakunci;
+            StartCoroutine(requestPeneliti.RequestData((result) => {
+                foreach (var data in result.data[0].nama_peneliti)
+                {
+
+                    GameObject NodeAbjadPeneliti = (GameObject)Instantiate(NodePeneliti);
+                    NodeAbjadPeneliti.name = data.nama;
+                    //Debug.Log(data.kode_fakultas);
+                    NodeAbjadPeneliti.tag = "ListKataKunciPeneliti";
+                    //int jumlah = data.total;
+
+                    int jumlah = data.jumlah;
+                    //float sizeCoef = 0.005f;
+                    float size = jumlah * sizeCoef * 10;
+
+                    NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
+                    tambahan.kode_peneliti = data.kode_dosen.ToString();
+                    tambahan.nama = NodeAbjadPeneliti.name;
+                    tambahan.jumlah = jumlah;
+                    tambahan.ukuran = size;
+                    tambahan.ukuran2 = new Vector3(size, size, size);
+
+
+                    spawnNode(NodeAbjadPeneliti, size);
+
+                    //transform.SetParent(ParentTransform, false);
+                    //NodeAbjadPeneliti.transform.SetParent(parentPenelitiScatter.transform, false);
+                }
+                listPeneliti = GameObject.FindGameObjectsWithTag("ListKataKunciPeneliti");
+                foreach (GameObject node in listPeneliti)
+                {
+                    animate = animateNode(node, node.GetComponent<NodeVariable>().ukuran2, endMarker, InitialRotation, 0);
+                    StartCoroutine(animate);
+                }
+            }, error => {
+                if (error != "")
+                {
+                    retryMessage.text = error;
+                    retry.SetActive(true);
+                    connectionMessagePanel.SetActive(false);
+                }
+            }
+            ));
+        }
+    }
+
     public void spawnNode(GameObject node, float size)
     {
         int test = Random.Range(0, 2);
         if (test == 0) { node.GetComponent<FloatingSphere>().orientation = -1; }
 
-        node.transform.SetParent(parentPenelitiScatter.transform);
+        node.transform.SetParent(parentPenelitiScatter.transform, false);
         node.transform.localPosition = new Vector3(Random.Range(-3.0f, 3.0f), 0, Random.Range(-3.0f, 3.0f));
         //node.transform.localScale = new Vector3(size, size, size);
         node.transform.localScale = new Vector3(0f, 0f, 0f);
@@ -446,13 +777,12 @@ public class EventHandler : MonoBehaviour
         if (node.CompareTag("ListPenelitiAbjad"))
         {
             node.GetComponent<Renderer>().material = AbjadMaterial;
-
         }
         else if (node.CompareTag("ListPenelitiInisial"))
         {
             node.GetComponent<Renderer>().material = InisialMaterial;
         }
-        else if (node.CompareTag("ListPenelitiFakultas") || node.CompareTag("ListPenelitiDepartemen"))
+        else if (node.CompareTag("ListPenelitiFakultas") || node.CompareTag("ListPenelitiDepartemen") || node.CompareTag("ListPublikasiFakultas") || node.CompareTag("ListPublikasiKataKunci"))
         {
             switch (int.Parse(node.GetComponent<NodeVariable>().kode_peneliti))
             {
@@ -537,6 +867,77 @@ public class EventHandler : MonoBehaviour
             }
         }
     }    
+
+    public void changeSpeedNode(float zoom)
+    {
+        if(listPeneliti != null)
+        {
+            foreach (GameObject node in listPeneliti)
+            {
+                node.GetComponent<FloatingSphere>().frequency += zoom;
+            }
+        }
+    }
+
+    public void movePositionNode(string axis, float amount)
+    {
+        var location = parentPenelitiScatter.transform.localPosition;
+        if (axis == "x")
+        {
+            //parentPenelitiScatter.transform.localPosition.x = parentPenelitiScatter.transform.localPosition.x + amount;
+            parentPenelitiScatter.transform.localPosition = parentPenelitiScatter.transform.localPosition + new Vector3(amount, 0, 0);
+            //location.x += amount;
+        }
+        else if (axis == "y")
+        {
+            parentPenelitiScatter.transform.localPosition = parentPenelitiScatter.transform.localPosition + new Vector3(0, amount, 0);
+            //location.y += amount;
+        }
+        else if (axis == "z")
+        {
+            parentPenelitiScatter.transform.localPosition = parentPenelitiScatter.transform.localPosition + new Vector3(0, 0, amount);
+            //location.z += amount;
+        }
+        else
+        {
+            Debug.Log("error, only supporting 3 axis (x,y,z)");
+        }
+    }
+
+    public void transparentNode(int transparentType)
+    {
+        if (listPeneliti != null)
+        {
+            foreach (GameObject node in listPeneliti)
+            {
+                Debug.Log("tes");
+
+                //node.GetComponent<Renderer>().material.color = node.GetComponent<Renderer>().material.color + new Color32(0, (byte)amount, 0, (byte)amount);
+                //Debug.Log(node.GetComponent<Renderer>().material.shader.name);
+                //node.GetComponent<Renderer>().material.SetColor("_BaseColor", new Color32(255, 255, 255, 170));
+                //node.GetComponent<Renderer>().material.SetColor("_EmissionMap", new Color32(132, 132, 132, 170));
+                //node.GetComponent<Renderer>().material.setCo
+
+                //node.GetComponent<Renderer>().material.color.a = node.GetComponent<Renderer>().material.color.a
+                //new Color32(255, , 1, 1);
+
+                if (transparentType == 0)
+                {
+                    //node.GetComponent<Renderer>().material = new Material("Node Basic Material");
+                    node.GetComponent<Renderer>().material = lessTransparentMaterial;
+                }
+                else if(transparentType == 1)
+                {
+                    node.GetComponent<Renderer>().material = normalTransparentMaterial;
+                }
+                else
+                {
+                    node.GetComponent<Renderer>().material = moreTransparentMaterial;
+                }
+            }
+        }
+    }
+
     public void flushNode()
     {
         if(listPeneliti != null)
@@ -586,8 +987,16 @@ public class EventHandler : MonoBehaviour
     {
         //NodeVariable.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[0].journals.ToString();
         namaPeneliti.text = rawdata.data[0].detail_peneliti[0].nama;
+        tanggalPeneliti.text = rawdata.data[0].detail_peneliti[0].tanggal_lahir;
         fakultasPeneliti.text = rawdata.data[0].detail_peneliti[0].fakultas;
         departemenPeneliti.text = rawdata.data[0].detail_peneliti[0].departemen;
+
+        jurnalPeneliti.text = rawdata.data[0].detail_peneliti[0].jurnal.ToString();
+        konferensiPeneliti.text = rawdata.data[0].detail_peneliti[0].konferensi.ToString();
+        bukuPeneliti.text = rawdata.data[0].detail_peneliti[0].buku.ToString();
+        tesisPeneliti.text = rawdata.data[0].detail_peneliti[0].tesis.ToString();
+        patenPeneliti.text = rawdata.data[0].detail_peneliti[0].paten.ToString();
+        penelitianPeneliti.text = rawdata.data[0].detail_peneliti[0].penelitian.ToString();
     }
 
     public void buttonPressed(string identifier, string name = null)

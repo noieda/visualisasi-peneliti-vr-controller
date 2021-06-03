@@ -11,8 +11,10 @@ public class ListData
     public List<Peneliti> nama_peneliti;
     public List<Fakultas> fakultas_peneliti;
     public List<Departemen> departemen_peneliti;
+    public List<Gelar> gelar_peneliti;
     public List<DetailPeneliti> detail_peneliti;
     public List<HasilPublikasiITS> hasil_publikasi;
+    public List<KataKunci> fakultas_publikasi;
 }
 
 [System.Serializable]
@@ -36,8 +38,15 @@ public class HasilPublikasiITS
 public class DetailPeneliti
 {
     public string nama;
+    public string tanggal_lahir;
     public string fakultas;
     public string departemen;
+    public int jurnal;
+    public int konferensi;
+    public int buku;
+    public int tesis;
+    public int paten;
+    public int penelitian;
 }
 
 [System.Serializable]
@@ -70,4 +79,20 @@ public class Departemen
     public int kode_departemen;
     public string nama_departemen;
     public int jumlah;
+}
+
+[System.Serializable]
+public class Gelar
+{
+    public string gelar;
+    public int jumlah;
+}
+
+[System.Serializable]
+public class KataKunci
+{
+    public int kode_fakultas;
+    public string kata_kunci;
+    public string idf;
+    public string df;
 }

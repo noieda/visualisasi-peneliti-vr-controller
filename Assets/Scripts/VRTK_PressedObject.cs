@@ -11,6 +11,8 @@
         bool PBA = false; // Peneliti Button Active
         bool ABA = false; // Abjad Button Active
         bool FBA = false; // Fakultas Button Active
+        bool GBA = false; // Gelar Button Active
+        bool LBA = false; // Laboratorium Button Active
         bool TBA = false; // Table Button Active
         bool OBA = false; // Option Button Active
 
@@ -33,8 +35,10 @@
                 {
                     string kode = GetComponent<NodeVariable>().kode_peneliti;
                     Debug.Log(kode + " <- NodeVariable");
+                    Manager.GetComponent<Manager>().OpenResearcherDetail();
                     Manager.GetComponent<Manager>().getDetailPenelitiITS(kode);
                 }
+                
                 else if(CompareTag("ListPenelitiFakultas"))
                 {
                     string kode = GetComponent<NodeVariable>().kode_peneliti;
@@ -43,7 +47,47 @@
                 }
                 else if(CompareTag("ListPenelitiDepartemen"))
                 {
+                    string kode = GetComponent<NodeVariable>().kode_peneliti;
+                    Debug.Log(kode + " <- NodeVariable");
+                    Manager.GetComponent<Manager>().getPenelitiDepartemenDetailITS(kode);
+                }
+                else if(CompareTag("ListPenelitiDepartemenDetail"))
+                {
+                    string kode = GetComponent<NodeVariable>().kode_peneliti;
+                    Debug.Log(kode + " <- NodeVariable");
+                    Manager.GetComponent<Manager>().OpenResearcherDetail();
+                    Manager.GetComponent<Manager>().getDetailPenelitiITS(kode);
+                }
+                
+                else if(CompareTag("ListGelar"))
+                {
+                    string kode = GetComponent<NodeVariable>().kode_peneliti;
+                    Debug.Log(kode + " <- NodeVariable");
+                    Manager.GetComponent<Manager>().getGelarPenelitiDetail(kode);
+                }
+                else if (CompareTag("ListGelarDetail"))
+                {
+                    string kode = GetComponent<NodeVariable>().kode_peneliti;
+                    Debug.Log(kode + " <- NodeVariable");
+                    Manager.GetComponent<Manager>().OpenResearcherDetail();
+                    Manager.GetComponent<Manager>().getDetailPenelitiITS(kode);
+                }
 
+
+                else if(CompareTag("ListPublikasiFakultas"))
+                {
+                    string kode = GetComponent<NodeVariable>().kode_peneliti;
+                    Debug.Log(kode + " <- NodeVariable");
+                    Manager.GetComponent<Manager>().getPublikasiKataKunci(kode);
+                }
+
+
+                else if (CompareTag("ListPublikasiKataKunci"))
+                {
+                    string kode = GetComponent<NodeVariable>().kode_peneliti;
+                    string nama = name;
+                    //Debug.Log(kode + " <- NodeVariable");
+                    Manager.GetComponent<Manager>().getKataKunciPeneliti(kode, nama);
                 }
                 else
                 {
@@ -79,15 +123,17 @@
                     FBA = !FBA;
                     Manager.GetComponent<Manager>().getPenelitiFakultasITS();
                 }
-                else if (name == "SizeUpButton")
+                else if (name == "GelarButton") 
                 {
-                    Debug.Log("size up button");
-                    Manager.GetComponent<Manager>().resizeNode(0.1f);
+                    Debug.Log("gelar button");
+                    GBA = !GBA;
+                    Manager.GetComponent<Manager>().getGelarPenelitiITS();
                 }
-                else if (name == "SizeDownButton")
+                else if (name == "LaboratoriumButton")
                 {
-                    Debug.Log("size down button");
-                    Manager.GetComponent<Manager>().resizeNode(-0.1f);
+                    Debug.Log("LaboratoriumButton");
+                    LBA = !LBA;
+                    Manager.GetComponent<Manager>().getPublikasiFakultas();
                 }
                 else if (name == "NavigationButton")
                 {
@@ -95,13 +141,95 @@
                     TBA = !TBA;
                     Manager.GetComponent<Manager>().TableButton.SetActive(TBA);
                 }
+                
+                
                 else if (name == "OptionButton")
                 {
                     Debug.Log("option button");
                     OBA = !OBA;
-                    ButtonDisplay.SetActive(OBA);
-                    //ButtonDisplay.GetComponentInChildren;
+                    Manager.GetComponent<Manager>().OptionToggle();
                 }
+                else if (name == "BiggerNodeButton")
+                {
+                    Debug.Log("size up button");
+                    Manager.GetComponent<Manager>().resizeNode(0.1f);
+                }
+                else if (name == "SmallerNodeButton")
+                {
+                    Debug.Log("size down button");
+                    Manager.GetComponent<Manager>().resizeNode(-0.1f);
+                }
+                else if (name == "FasterNodeAnimationButton")
+                {
+                    Debug.Log("faster node animation");
+                    Manager.GetComponent<Manager>().changeSpeedNode(0.05f);
+                }
+                else if (name == "SlowerNodeAnimationButton")
+                {
+                    Debug.Log("slower node animation");
+                    Manager.GetComponent<Manager>().changeSpeedNode(-0.05f);
+                }
+                else if (name == "xMinusButton")
+                {
+                    Debug.Log("xminus button");
+                    Manager.GetComponent<Manager>().movePositionNode("x", -0.5f);
+                }
+                else if (name == "xPlusButton")
+                {
+                    Debug.Log("xminus button");
+                    Manager.GetComponent<Manager>().movePositionNode("x", 0.5f);
+                }
+                else if (name == "yMinusButton")
+                {
+                    Debug.Log("yminus button");
+
+                    Manager.GetComponent<Manager>().movePositionNode("y", -0.5f);
+                }
+                else if (name == "yPlusButton")
+                {
+                    Debug.Log("yplus button");
+
+                    Manager.GetComponent<Manager>().movePositionNode("y", 0.5f);
+                }
+                else if (name == "zMinusButton")
+                {
+                    Debug.Log("zminus button");
+
+                    Manager.GetComponent<Manager>().movePositionNode("z", -0.5f);
+                }
+                else if (name == "zPlusButton")
+                {
+                    Debug.Log("zplus button");
+
+                    Manager.GetComponent<Manager>().movePositionNode("z", 0.5f);
+                }
+                else if (name == "LessTransparentNodeButton")
+                {
+                    Debug.Log("less transparent button");
+
+                    Manager.GetComponent<Manager>().transparentNode(0);
+                }
+                else if (name == "NormalTransparentNodeButton")
+                {
+                    Debug.Log("normal transparent button");
+
+                    Manager.GetComponent<Manager>().transparentNode(1);
+
+                }
+                else if (name == "MoreTransparentNodeButton")
+                {
+                    Debug.Log("more transparent button");
+
+                    Manager.GetComponent<Manager>().transparentNode(2);
+                }
+
+                else if (name == "TutupDetailPeneliti")
+                {
+                    Debug.Log("tutup detail button");
+                    Manager.GetComponent<Manager>().CloseResearcherDetail();
+                }
+
+
                 else
                 {
                     Debug.Log(name);
@@ -119,6 +247,18 @@
             
             if (gameObject.GetComponent<NodeVariable>() != null)
             {
+                if (CompareTag("ListPublikasiFakultas") || CompareTag("ListPublikasiKataKunci") )
+                {
+                    Debug.Log("touch vrtk");
+                    Manager.GetComponent<EventHandler>().peekNodePeneliti(gameObject, "peneliti");
+                }
+                else
+                {
+                    Debug.Log("touch vrtk");
+                    Manager.GetComponent<EventHandler>().peekNodePeneliti(gameObject);
+                }
+                
+                /*
                 if (CompareTag("ListPenelitiAbjad"))
                 {
                     Debug.Log("touch a-> " + name);
@@ -139,6 +279,13 @@
                     Manager.GetComponent<EventHandler>().peekPenelitiAbjadITS(gameObject);
 
                 }
+                else if (CompareTag("ListPenelitiDepartemen"))
+                {
+                    Debug.Log("touch c-> " + name);
+                    Manager.GetComponent<EventHandler>().peekPenelitiAbjadITS(gameObject);
+
+                }
+                */
             }
 
         }

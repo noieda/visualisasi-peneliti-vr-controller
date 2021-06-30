@@ -20,9 +20,9 @@ public class Manager : EventHandler
     // Start is called before the first frame update
     void Start()
     {
-        SetURL();
+        StartConnection();
     }
-    public void SetURL()
+    public void StartConnection()
     {
         Config config = new Config();
         Debug.Log("Manager -> " +ipAddress +":"+ portServer);
@@ -46,6 +46,7 @@ public class Manager : EventHandler
     {
         dashboardStatus = !dashboardStatus;
         DashboardBar.SetActive(dashboardStatus);
+        //DashboardBar.transform.LookAt(GetComponent<EventHandler>().playerHead.transform);
 
         Debug.Log("dashboard button pressed <- eventHandler");
     }

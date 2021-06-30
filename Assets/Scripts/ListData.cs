@@ -59,6 +59,7 @@ public class Inisial
 [System.Serializable]
 public class Peneliti
 {
+    public string nama_departemen;
     public string kode_dosen;
     public string nama;
     public int jumlah;
@@ -69,13 +70,14 @@ public class Fakultas
 {
     public int kode_fakultas;
     public string nama_fakultas;
-    public int jumlah;
+    public int jumlah;  
 }
 
 [System.Serializable]
 public class Departemen
 {
     public int kode_fakultas;
+    public string nama_fakultas;
     public int kode_departemen;
     public string nama_departemen;
     public int jumlah;
@@ -92,6 +94,7 @@ public class Gelar
 public class KataKunci
 {
     public int kode_fakultas;
+    public string nama_fakultas;
     public string kata_kunci;
     public string idf;
     public string df;

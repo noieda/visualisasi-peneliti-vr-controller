@@ -37,6 +37,8 @@ public class EventHandler : MonoBehaviour
     public bool dashboardStatus = false;
     bool dashboardRefreshed = false;
 
+
+
     [Header("Pengaturan Node")]
     // peneliti ( secara umum )
     public GameObject parentPenelitiScatter;
@@ -109,6 +111,10 @@ public class EventHandler : MonoBehaviour
     public GameObject OptionBar;
     public bool detOptionStatus = false;
 
+    [Header("Navigator")]
+
+    public TMP_Text NavigatorText;
+
     RequestHandler requestPeneliti = new RequestHandler();
 
     // Start is called before the first frame update
@@ -130,7 +136,7 @@ public class EventHandler : MonoBehaviour
             URL = config.GetWebAPI();
         }
         //Dashboard();
-        //getDetailPenelitiITS(4987.ToString());
+        getDetailPenelitiITS(4987.ToString());
         //getPenelitiAbjadITS();
         //getPublikasiFakultas();
         //getPenelitiFakultasITS();
@@ -144,6 +150,7 @@ public class EventHandler : MonoBehaviour
             //dashboardRefreshed = true;
             //RequestHandler requestHandler = new RequestHandler();
             requestPeneliti.URL = URL;
+            NavigatorText.text = "Dashboard";
             StartCoroutine(requestPeneliti.RequestData((result) =>
             {
                 // mengambil jumlah jurnal, conference, books, thesis, paten dan research yang ada
@@ -179,8 +186,8 @@ public class EventHandler : MonoBehaviour
         publikasiKonferensi.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[1].conferences.ToString();
         publikasiBuku.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[2].books.ToString();
 
-        //publikasiTesis.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[3].thesis.ToString();
-        //publikasiPaten.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[4].paten.ToString();
+        publikasiTesis.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[3].thesis.ToString();
+        publikasiPaten.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[4].paten.ToString();
 
         publikasiPenelitian.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[5].research.ToString();
 
@@ -194,6 +201,7 @@ public class EventHandler : MonoBehaviour
             flushNode();
 
             requestPeneliti.URL = URL + "/peneliti?abjad=none";
+            NavigatorText.text = "Abjad";
             StartCoroutine(requestPeneliti.RequestData((result) => {
                 foreach (var data in result.data[0].inisial_peneliti)
                 {
@@ -255,31 +263,33 @@ public class EventHandler : MonoBehaviour
 
         }
 
-        
-
     }
 
-    public void peekNodePeneliti(GameObject NodePeneliti, string jenis="publikasi")
+    public void peekNodePeneliti(GameObject NodePeneliti, string jenis="peneliti")
     {
-        GameObject peekNodePeneliti = (GameObject)Instantiate(peekPeneliti);
-        
+        GameObject peekNodePeneliti = peekPeneliti;
+        peekNodePeneliti.SetActive(true);
         var peekNode = peekNodePeneliti.transform;
         //float nodeDistance = NodePeneliti.transform.localScale.y;
-        peekNode.name = "peekPeneliti";
+        
+        
+        //peekNode.name = "peekPeneliti";
+        
+        
         //peekNode.SetParent(NodePeneliti.transform);
 
-        var peekpoint = GameObject.Find("HoverPeek").transform;
-        if (peekpoint != null)
-        {
-            peekNode.SetParent(peekpoint);
+        //var peekpoint = GameObject.Find("HoverPeekOC").transform;
+        //if (peekpoint != null)
+        //{
+        //    peekNode.SetParent(peekpoint);
 
-        }
+        //}
 
         var peek = peekNode.GetChild(0);
 
-        peekNodePeneliti.transform.localPosition = new Vector3(0, -0f, 0);
-        peekNodePeneliti.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
-        peekNodePeneliti.transform.LookAt(playerHead.transform);
+        //peekNodePeneliti.transform.localPosition = new Vector3(0, -0f, 0);
+        //peekNodePeneliti.transform.localScale = new Vector3(0.4f, 0.4f, 0.4f);
+        //peekNodePeneliti.transform.LookAt(playerHead.transform);
 
         var peekNodeNama = peek.GetChild(1).GetComponent<TMP_Text>();
         var PeekNodeTitle = peek.GetChild(2).GetComponent<TMP_Text>();
@@ -303,7 +313,7 @@ public class EventHandler : MonoBehaviour
             //penelitiInisialRefreshed = true;
 
             flushNode();
-
+            NavigatorText.text = "Inisial " + inisial;
             requestPeneliti.URL = URL + "/peneliti?abjad=" + inisial;
             StartCoroutine(requestPeneliti.RequestData((result) => {
                 foreach (var data in result.data[0].nama_peneliti)
@@ -345,7 +355,7 @@ public class EventHandler : MonoBehaviour
                 }
             }
             ));
-        }
+        }NavigatorText.text = "Dashboard";
     }
 
     public void getPenelitiFakultasITS()
@@ -357,6 +367,7 @@ public class EventHandler : MonoBehaviour
             flushNode();
 
             requestPeneliti.URL = URL + "/peneliti?fakultas=none";
+            NavigatorText.text = "Fakultas";
             StartCoroutine(requestPeneliti.RequestData((result) => {
                 foreach (var data in result.data[0].fakultas_peneliti)
                 {
@@ -372,6 +383,7 @@ public class EventHandler : MonoBehaviour
                     float size = jumlah * sizeCoef;
 
                     NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
+                    tambahan.kode_alternate = data.kode_fakultas.ToString();
                     tambahan.kode_peneliti = data.kode_fakultas.ToString();
                     tambahan.nama = data.nama_fakultas;
                     tambahan.jumlah = jumlah;
@@ -412,7 +424,9 @@ public class EventHandler : MonoBehaviour
             flushNode();
 
             requestPeneliti.URL = URL + "/peneliti?fakultas=" + kode_fakultas.ToString();
+            //NavigatorText.text = "Fakultas";
             StartCoroutine(requestPeneliti.RequestData((result) => {
+                NavigatorText.text = result.data[0].departemen_peneliti[0].nama_fakultas;
                 foreach (var data in result.data[0].departemen_peneliti)
                 {
 
@@ -426,7 +440,8 @@ public class EventHandler : MonoBehaviour
 
 
                     NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
-                    tambahan.kode_peneliti = data.kode_fakultas.ToString();
+                    tambahan.kode_alternate = data.kode_fakultas.ToString();
+                    tambahan.kode_peneliti = data.kode_departemen.ToString();
                     tambahan.nama = data.nama_departemen;
                     tambahan.jumlah = jumlah;
                     tambahan.ukuran = size;
@@ -440,6 +455,7 @@ public class EventHandler : MonoBehaviour
                     animate = animateNode(node, node.GetComponent<NodeVariable>().ukuran2, endMarker, InitialRotation, 0);
                     StartCoroutine(animate);
                 }
+                
             }, error => {
                 if (error != "")
                 {
@@ -463,6 +479,7 @@ public class EventHandler : MonoBehaviour
 
             requestPeneliti.URL = URL + "/peneliti?departemen=" + kode_departemen.ToString();
             StartCoroutine(requestPeneliti.RequestData((result) => {
+                NavigatorText.text = result.data[0].nama_peneliti[0].nama_departemen;
                 foreach (var data in result.data[0].nama_peneliti)
                 {
 
@@ -510,6 +527,7 @@ public class EventHandler : MonoBehaviour
             flushNode();
 
             requestPeneliti.URL = URL + "/gelar?kode=none";
+            NavigatorText.text = "Gelar";
             StartCoroutine(requestPeneliti.RequestData((result) => {
                 foreach (var data in result.data[0].gelar_peneliti)
                 {
@@ -562,6 +580,7 @@ public class EventHandler : MonoBehaviour
             flushNode();
 
             requestPeneliti.URL = URL + "/gelar?kode="+kode;
+            NavigatorText.text = "Gelar : " + kode;
             StartCoroutine(requestPeneliti.RequestData((result) => {
                 foreach (var data in result.data[0].nama_peneliti)
                 {
@@ -614,6 +633,7 @@ public class EventHandler : MonoBehaviour
             flushNode();
 
             requestPeneliti.URL = URL + "/publikasi?fakultas=none";
+            NavigatorText.text = "Publikasi";
             StartCoroutine(requestPeneliti.RequestData((result) => {
                 foreach (var data in result.data[0].fakultas_peneliti)
                 {
@@ -630,6 +650,7 @@ public class EventHandler : MonoBehaviour
                     float size = jumlah * sizeCoef * 0.1f;
 
                     NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
+                    tambahan.kode_alternate = data.kode_fakultas.ToString();
                     tambahan.kode_peneliti = data.kode_fakultas.ToString();
                     tambahan.nama = NodeAbjadPeneliti.name;
                     tambahan.jumlah = jumlah;
@@ -668,8 +689,10 @@ public class EventHandler : MonoBehaviour
 
             requestPeneliti.URL = URL + "/publikasi?fakultas=" + kode;
             StartCoroutine(requestPeneliti.RequestData((result) => {
+                NavigatorText.text = result.data[0].fakultas_publikasi[0].nama_fakultas;
                 foreach (var data in result.data[0].fakultas_publikasi)
                 {
+                    
 
                     GameObject NodeAbjadPeneliti = (GameObject)Instantiate(NodePeneliti);
                     NodeAbjadPeneliti.name = data.kata_kunci;
@@ -682,6 +705,7 @@ public class EventHandler : MonoBehaviour
                     float size = jumlah * sizeCoef;
 
                     NodeVariable tambahan = NodeAbjadPeneliti.AddComponent<NodeVariable>();
+                    tambahan.kode_alternate = data.kode_fakultas.ToString();
                     tambahan.kode_peneliti = data.kode_fakultas.ToString();
                     tambahan.nama = NodeAbjadPeneliti.name;
                     tambahan.jumlah = jumlah;
@@ -719,6 +743,7 @@ public class EventHandler : MonoBehaviour
             flushNode();
 
             requestPeneliti.URL = URL + "/publikasi?fakultas=" + fakultas + "&katakunci=" + katakunci;
+            NavigatorText.text = "Katakunci : " + katakunci;
             StartCoroutine(requestPeneliti.RequestData((result) => {
                 foreach (var data in result.data[0].nama_peneliti)
                 {
@@ -782,9 +807,9 @@ public class EventHandler : MonoBehaviour
         {
             node.GetComponent<Renderer>().material = InisialMaterial;
         }
-        else if (node.CompareTag("ListPenelitiFakultas") || node.CompareTag("ListPenelitiDepartemen") || node.CompareTag("ListPublikasiFakultas") || node.CompareTag("ListPublikasiKataKunci"))
+        else if (node.CompareTag("ListPenelitiFakultas") || node.CompareTag("ListPenelitiDepartemen") || node.CompareTag("ListPublikasiFakultas") || node.CompareTag("ListPublikasiKataKunci") || node.CompareTag("ListPublikasiKataKunci"))
         {
-            switch (int.Parse(node.GetComponent<NodeVariable>().kode_peneliti))
+            switch (int.Parse(node.GetComponent<NodeVariable>().kode_alternate))
             {
                 case 1:
                     
@@ -816,7 +841,7 @@ public class EventHandler : MonoBehaviour
         }
         else 
         {
-
+            Debug.Log("no material added");
         }
 
         //node.GetComponent<Renderer>().material = AbjadMaterial;

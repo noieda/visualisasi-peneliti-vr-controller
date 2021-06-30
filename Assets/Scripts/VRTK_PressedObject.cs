@@ -80,8 +80,6 @@
                     Debug.Log(kode + " <- NodeVariable");
                     Manager.GetComponent<Manager>().getPublikasiKataKunci(kode);
                 }
-
-
                 else if (CompareTag("ListPublikasiKataKunci"))
                 {
                     string kode = GetComponent<NodeVariable>().kode_peneliti;
@@ -89,6 +87,17 @@
                     //Debug.Log(kode + " <- NodeVariable");
                     Manager.GetComponent<Manager>().getKataKunciPeneliti(kode, nama);
                 }
+                else if (CompareTag("ListKataKunciPeneliti"))
+                {
+                    string kode = GetComponent<NodeVariable>().kode_peneliti;
+                    string nama = name;
+                    //Debug.Log(kode + " <- NodeVariable");
+                    Manager.GetComponent<Manager>().OpenResearcherDetail();
+                    Manager.GetComponent<Manager>().getDetailPenelitiITS(kode);
+                }
+
+
+                
                 else
                 {
                     Debug.Log("a");
@@ -129,9 +138,9 @@
                     GBA = !GBA;
                     Manager.GetComponent<Manager>().getGelarPenelitiITS();
                 }
-                else if (name == "LaboratoriumButton")
+                else if (name == "PublikasiButton")
                 {
-                    Debug.Log("LaboratoriumButton");
+                    Debug.Log("PublikasiButton");
                     LBA = !LBA;
                     Manager.GetComponent<Manager>().getPublikasiFakultas();
                 }
@@ -247,10 +256,11 @@
             
             if (gameObject.GetComponent<NodeVariable>() != null)
             {
-                if (CompareTag("ListPublikasiFakultas") || CompareTag("ListPublikasiKataKunci") )
+                
+                if (CompareTag("ListPublikasiFakultas") || CompareTag("ListPublikasiKataKunci") || CompareTag("ListPenelitiInisial"))
                 {
                     Debug.Log("touch vrtk");
-                    Manager.GetComponent<EventHandler>().peekNodePeneliti(gameObject, "peneliti");
+                    Manager.GetComponent<EventHandler>().peekNodePeneliti(gameObject, "publikasi");
                 }
                 else
                 {
@@ -258,46 +268,20 @@
                     Manager.GetComponent<EventHandler>().peekNodePeneliti(gameObject);
                 }
                 
-                /*
-                if (CompareTag("ListPenelitiAbjad"))
-                {
-                    Debug.Log("touch a-> " + name);
-                    ///Manager.GetComponent<EventHandler>().buttonPressed(tag, name);
-                    Manager.GetComponent<EventHandler>().peekPenelitiAbjadITS(gameObject);
-
-                }
-                else if (CompareTag("ListPenelitiInisial"))
-                {
-                    Debug.Log("touch b-> " + name);
-                    ///Manager.GetComponent<EventHandler>().buttonPressed(tag, name);
-                    Manager.GetComponent<EventHandler>().peekPenelitiAbjadITS(gameObject);
-
-                }
-                else if (CompareTag("ListPenelitiFakultas"))
-                {
-                    Debug.Log("touch c-> " + name);
-                    Manager.GetComponent<EventHandler>().peekPenelitiAbjadITS(gameObject);
-
-                }
-                else if (CompareTag("ListPenelitiDepartemen"))
-                {
-                    Debug.Log("touch c-> " + name);
-                    Manager.GetComponent<EventHandler>().peekPenelitiAbjadITS(gameObject);
-
-                }
-                */
             }
 
         }
 
         public override void StopTouching(VRTK_InteractTouch usingObject)
         {
-            base.StartTouching(usingObject);
+            base.StopTouching(usingObject);
             Debug.Log(name + " <- finished touched");
-            GameObject peekDelete = GameObject.Find("peekPeneliti");
-            if (peekDelete != null)
+            GameObject peekDelete = Manager.GetComponent<EventHandler>().peekPeneliti;
+            
+            if (peekDelete.activeSelf != false)
             {
-                Destroy(peekDelete);
+                //Destroy(peekDelete);
+                peekDelete.SetActive(false);
             }
             GameObject usingObject2 = (usingObject != null ? usingObject.gameObject : null);
 

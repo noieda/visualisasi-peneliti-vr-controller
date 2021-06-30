@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class NodeVariable : MonoBehaviour
 {
+    public string kode_alternate;
     public string kode_peneliti;
     public string nama;
     public int jumlah;

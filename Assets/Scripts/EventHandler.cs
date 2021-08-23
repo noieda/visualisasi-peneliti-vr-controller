@@ -201,7 +201,7 @@ public class EventHandler : MonoBehaviour
             flushNode();
 
             requestPeneliti.URL = URL + "/peneliti?abjad=none";
-            NavigatorText.text = "Abjad";
+            NavigatorText.text = "Initials";
             StartCoroutine(requestPeneliti.RequestData((result) => {
                 foreach (var data in result.data[0].inisial_peneliti)
                 {
@@ -299,7 +299,7 @@ public class EventHandler : MonoBehaviour
 
         if (jenis != "publikasi")
         {
-            PeekNodeTitle.text = "Jumlah Peneliti";
+            PeekNodeTitle.text = "Total Researchers";
         }
 
         peekNodeNama.text = NodeVariable;
@@ -313,7 +313,7 @@ public class EventHandler : MonoBehaviour
             //penelitiInisialRefreshed = true;
 
             flushNode();
-            NavigatorText.text = "Inisial " + inisial;
+            NavigatorText.text = "Initial :" + inisial;
             requestPeneliti.URL = URL + "/peneliti?abjad=" + inisial;
             StartCoroutine(requestPeneliti.RequestData((result) => {
                 foreach (var data in result.data[0].nama_peneliti)
@@ -355,7 +355,7 @@ public class EventHandler : MonoBehaviour
                 }
             }
             ));
-        }NavigatorText.text = "Dashboard";
+        }
     }
 
     public void getPenelitiFakultasITS()
@@ -367,7 +367,7 @@ public class EventHandler : MonoBehaviour
             flushNode();
 
             requestPeneliti.URL = URL + "/peneliti?fakultas=none";
-            NavigatorText.text = "Fakultas";
+            NavigatorText.text = "Faculties";
             StartCoroutine(requestPeneliti.RequestData((result) => {
                 foreach (var data in result.data[0].fakultas_peneliti)
                 {
@@ -422,7 +422,7 @@ public class EventHandler : MonoBehaviour
             //penelitiDepartemenRefreshed = true;
 
             flushNode();
-
+            //NavigatorText.text = "Kode Fakultas : " + kode_fakultas.ToString();
             requestPeneliti.URL = URL + "/peneliti?fakultas=" + kode_fakultas.ToString();
             //NavigatorText.text = "Fakultas";
             StartCoroutine(requestPeneliti.RequestData((result) => {
@@ -527,7 +527,7 @@ public class EventHandler : MonoBehaviour
             flushNode();
 
             requestPeneliti.URL = URL + "/gelar?kode=none";
-            NavigatorText.text = "Gelar";
+            NavigatorText.text = "Academic Degree";
             StartCoroutine(requestPeneliti.RequestData((result) => {
                 foreach (var data in result.data[0].gelar_peneliti)
                 {
@@ -580,7 +580,7 @@ public class EventHandler : MonoBehaviour
             flushNode();
 
             requestPeneliti.URL = URL + "/gelar?kode="+kode;
-            NavigatorText.text = "Gelar : " + kode;
+            NavigatorText.text = "Degree : " + kode;
             StartCoroutine(requestPeneliti.RequestData((result) => {
                 foreach (var data in result.data[0].nama_peneliti)
                 {
@@ -633,7 +633,7 @@ public class EventHandler : MonoBehaviour
             flushNode();
 
             requestPeneliti.URL = URL + "/publikasi?fakultas=none";
-            NavigatorText.text = "Publikasi";
+            NavigatorText.text = "Publications";
             StartCoroutine(requestPeneliti.RequestData((result) => {
                 foreach (var data in result.data[0].fakultas_peneliti)
                 {
@@ -743,7 +743,7 @@ public class EventHandler : MonoBehaviour
             flushNode();
 
             requestPeneliti.URL = URL + "/publikasi?fakultas=" + fakultas + "&katakunci=" + katakunci;
-            NavigatorText.text = "Katakunci : " + katakunci;
+            NavigatorText.text = "Keyword : " + katakunci;
             StartCoroutine(requestPeneliti.RequestData((result) => {
                 foreach (var data in result.data[0].nama_peneliti)
                 {

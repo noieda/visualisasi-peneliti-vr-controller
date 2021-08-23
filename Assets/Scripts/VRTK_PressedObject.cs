@@ -260,7 +260,7 @@
                 if (CompareTag("ListPublikasiFakultas") || CompareTag("ListPublikasiKataKunci") || CompareTag("ListPenelitiInisial"))
                 {
                     Debug.Log("touch vrtk");
-                    Manager.GetComponent<EventHandler>().peekNodePeneliti(gameObject, "publikasi");
+                    Manager.GetComponent<EventHandler>().peekNodePeneliti(gameObject, "publications");
                 }
                 else
                 {

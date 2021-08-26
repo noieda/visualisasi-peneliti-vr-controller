@@ -15,6 +15,7 @@ TagManager:
   - ListPublikasiFakultas
   - ListPublikasiKataKunci
   - ListKataKunciPeneliti
+  - Dashboard
   layers:
   - Default
   - TransparentFX

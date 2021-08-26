@@ -48,7 +48,13 @@ public class Manager : EventHandler
         DashboardBar.SetActive(dashboardStatus);
         //DashboardBar.transform.LookAt(GetComponent<EventHandler>().playerHead.transform);
 
-        Debug.Log("dashboard button pressed <- eventHandler");
+        //listDashboard = GameObject.FindGameObjectsWithTag("Dashboard");
+        //foreach(GameObject dashboard in listDashboard)
+        //{
+        //    dashboard.SetActive(dashboardStatus);
+        //}
+
+        Debug.Log("dashboard button pressed <- manager");
     }
 
     public void PenelitianToggle()

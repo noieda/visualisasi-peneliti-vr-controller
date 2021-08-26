@@ -109,7 +109,7 @@
                 {
                     Debug.Log("dashboard button");
                     DBA = !DBA;
-                    ButtonDisplay.SetActive(DBA);
+                    //ButtonDisplay.SetActive(DBA);
                     Manager.GetComponent<EventHandler>().Dashboard();
                     Manager.GetComponent<Manager>().DashboardToggle();
                 }

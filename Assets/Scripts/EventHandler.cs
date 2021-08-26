@@ -28,6 +28,8 @@ public class EventHandler : MonoBehaviour
     [Header("Dashboard")]
     // total publikasi - dashboard
     public GameObject DashboardBar;
+    public GameObject[] listDashboard;
+
     public Text publikasiJurnal;
     public Text publikasiKonferensi;
     public Text publikasiBuku;
@@ -181,15 +183,26 @@ public class EventHandler : MonoBehaviour
     // hasilPublikasiITS adalah data pertama yang ditampilkan di dashboard
     void hasilPublikasiITS(RawData rawdata)
     {
- 
-        publikasiJurnal.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[0].journals.ToString();
-        publikasiKonferensi.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[1].conferences.ToString();
-        publikasiBuku.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[2].books.ToString();
+        Text publikasiJurnalTest = DashboardBar.transform.GetChild(0).GetChild(2).GetChild(1).GetComponent<Text>();
+        Text publikasiKonferensiTest = DashboardBar.transform.GetChild(0).GetChild(3).GetChild(1).GetComponent<Text>();
+        Text publikasiBukuTest = DashboardBar.transform.GetChild(0).GetChild(4).GetChild(1).GetComponent<Text>();
+        Text publikasiTesisTest = DashboardBar.transform.GetChild(0).GetChild(5).GetChild(1).GetComponent<Text>();
+        Text publikasiPatenTest = DashboardBar.transform.GetChild(0).GetChild(6).GetChild(1).GetComponent<Text>();
+        Text publikasiPenelitianTest = DashboardBar.transform.GetChild(0).GetChild(7).GetChild(1).GetComponent<Text>();
 
-        publikasiTesis.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[3].thesis.ToString();
-        publikasiPaten.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[4].paten.ToString();
-
-        publikasiPenelitian.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[5].research.ToString();
+        publikasiJurnalTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[0].journals.ToString();
+        publikasiKonferensiTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[1].conferences.ToString();
+        publikasiBukuTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[2].books.ToString();
+        publikasiTesisTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[3].thesis.ToString();
+        publikasiPatenTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[4].paten.ToString();
+        publikasiPenelitianTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[5].research.ToString();
+        
+        //publikasiJurnal.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[0].journals.ToString();
+        //publikasiKonferensi.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[1].conferences.ToString();
+        //publikasiBuku.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[2].books.ToString();
+        //publikasiTesis.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[3].thesis.ToString();
+        //publikasiPaten.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[4].paten.ToString();
+        //publikasiPenelitian.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[5].research.ToString();
 
     }
 
@@ -1041,7 +1054,21 @@ public class EventHandler : MonoBehaviour
         else if(identifier == "DashboardButton")
         {
             dashboardStatus = !dashboardStatus;
-            DashboardBar.SetActive(dashboardStatus);
+
+            //listPeneliti = GameObject.FindGameObjectsWithTag("ListKataKunciPeneliti");
+            //foreach (GameObject node in listPeneliti)
+            //{
+            //    animate = animateNode(node, node.GetComponent<NodeVariable>().ukuran2, endMarker, InitialRotation, 0);
+            //    StartCoroutine(animate);
+            //}
+
+            //listDashboard = GameObject.FindGameObjectsWithTag("Dashboard");
+            //foreach(GameObject dashboard in listDashboard)
+            //{
+            //    dashboard.SetActive(dashboardStatus);
+            //}
+
+            //DashboardBar.SetActive(dashboardStatus);
 
             Debug.Log("dashboard button pressed <- eventHandler");
         }

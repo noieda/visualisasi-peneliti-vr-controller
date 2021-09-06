@@ -28,7 +28,11 @@ public class EventHandler : MonoBehaviour
     [Header("Dashboard")]
     // total publikasi - dashboard
     public GameObject DashboardBar;
-    public GameObject[] listDashboard;
+    public GameObject DashboardBar2;
+    public GameObject DashboardBar3;
+    public GameObject DashboardBar4;
+    //public GameObject[] listDashboard;
+    public List<GameObject> listDashboard2;
 
     public Text publikasiJurnal;
     public Text publikasiKonferensi;
@@ -183,19 +187,42 @@ public class EventHandler : MonoBehaviour
     // hasilPublikasiITS adalah data pertama yang ditampilkan di dashboard
     void hasilPublikasiITS(RawData rawdata)
     {
-        Text publikasiJurnalTest = DashboardBar.transform.GetChild(0).GetChild(2).GetChild(1).GetComponent<Text>();
-        Text publikasiKonferensiTest = DashboardBar.transform.GetChild(0).GetChild(3).GetChild(1).GetComponent<Text>();
-        Text publikasiBukuTest = DashboardBar.transform.GetChild(0).GetChild(4).GetChild(1).GetComponent<Text>();
-        Text publikasiTesisTest = DashboardBar.transform.GetChild(0).GetChild(5).GetChild(1).GetComponent<Text>();
-        Text publikasiPatenTest = DashboardBar.transform.GetChild(0).GetChild(6).GetChild(1).GetComponent<Text>();
-        Text publikasiPenelitianTest = DashboardBar.transform.GetChild(0).GetChild(7).GetChild(1).GetComponent<Text>();
+        listDashboard2.Add(DashboardBar);
+        listDashboard2.Add(DashboardBar2);
+        listDashboard2.Add(DashboardBar3);
+        listDashboard2.Add(DashboardBar4);
 
-        publikasiJurnalTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[0].journals.ToString();
-        publikasiKonferensiTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[1].conferences.ToString();
-        publikasiBukuTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[2].books.ToString();
-        publikasiTesisTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[3].thesis.ToString();
-        publikasiPatenTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[4].paten.ToString();
-        publikasiPenelitianTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[5].research.ToString();
+
+        foreach (GameObject dashboardPlane in listDashboard2)
+        {
+            Text publikasiJurnalTest = dashboardPlane.transform.GetChild(0).GetChild(2).GetChild(1).GetComponent<Text>();
+            Text publikasiKonferensiTest = dashboardPlane.transform.GetChild(0).GetChild(3).GetChild(1).GetComponent<Text>();
+            Text publikasiBukuTest = dashboardPlane.transform.GetChild(0).GetChild(4).GetChild(1).GetComponent<Text>();
+            Text publikasiTesisTest = dashboardPlane.transform.GetChild(0).GetChild(5).GetChild(1).GetComponent<Text>();
+            Text publikasiPatenTest = dashboardPlane.transform.GetChild(0).GetChild(6).GetChild(1).GetComponent<Text>();
+            Text publikasiPenelitianTest = dashboardPlane.transform.GetChild(0).GetChild(7).GetChild(1).GetComponent<Text>();
+
+            publikasiJurnalTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[0].journals.ToString();
+            publikasiKonferensiTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[1].conferences.ToString();
+            publikasiBukuTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[2].books.ToString();
+            publikasiTesisTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[3].thesis.ToString();
+            publikasiPatenTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[4].paten.ToString();
+            publikasiPenelitianTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[5].research.ToString();
+        }
+
+        //Text publikasiJurnalTest = DashboardBar.transform.GetChild(0).GetChild(2).GetChild(1).GetComponent<Text>();
+        //Text publikasiKonferensiTest = DashboardBar.transform.GetChild(0).GetChild(3).GetChild(1).GetComponent<Text>();
+        //Text publikasiBukuTest = DashboardBar.transform.GetChild(0).GetChild(4).GetChild(1).GetComponent<Text>();
+        //Text publikasiTesisTest = DashboardBar.transform.GetChild(0).GetChild(5).GetChild(1).GetComponent<Text>();
+        //Text publikasiPatenTest = DashboardBar.transform.GetChild(0).GetChild(6).GetChild(1).GetComponent<Text>();
+        //Text publikasiPenelitianTest = DashboardBar.transform.GetChild(0).GetChild(7).GetChild(1).GetComponent<Text>();
+
+        //publikasiJurnalTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[0].journals.ToString();
+        //publikasiKonferensiTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[1].conferences.ToString();
+        //publikasiBukuTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[2].books.ToString();
+        //publikasiTesisTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[3].thesis.ToString();
+        //publikasiPatenTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[4].paten.ToString();
+        //publikasiPenelitianTest.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[5].research.ToString();
         
         //publikasiJurnal.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[0].journals.ToString();
         //publikasiKonferensi.text = rawdata.data[0].dashboard_data[0].hasil_publikasi[1].conferences.ToString();
@@ -278,7 +305,7 @@ public class EventHandler : MonoBehaviour
 
     }
 
-    public void peekNodePeneliti(GameObject NodePeneliti, string jenis="peneliti")
+    public void peekNodePeneliti(GameObject NodePeneliti, string jenis="researchers")
     {
         GameObject peekNodePeneliti = peekPeneliti;
         peekNodePeneliti.SetActive(true);
@@ -310,9 +337,13 @@ public class EventHandler : MonoBehaviour
         var NodeVariable = NodePeneliti.GetComponent<NodeVariable>().nama;
         var jumlahPublikasi = NodePeneliti.GetComponent<NodeVariable>().jumlah;
 
-        if (jenis != "publikasi")
+        if (jenis == "researchers")
         {
             PeekNodeTitle.text = "Total Researchers";
+        }
+        else
+        {
+            PeekNodeTitle.text = "Total Publications";
         }
 
         peekNodeNama.text = NodeVariable;

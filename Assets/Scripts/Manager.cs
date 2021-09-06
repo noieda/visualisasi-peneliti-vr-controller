@@ -46,6 +46,9 @@ public class Manager : EventHandler
     {
         dashboardStatus = !dashboardStatus;
         DashboardBar.SetActive(dashboardStatus);
+        DashboardBar2.SetActive(dashboardStatus);
+        DashboardBar3.SetActive(dashboardStatus);
+        DashboardBar4.SetActive(dashboardStatus);
         //DashboardBar.transform.LookAt(GetComponent<EventHandler>().playerHead.transform);
 
         //listDashboard = GameObject.FindGameObjectsWithTag("Dashboard");

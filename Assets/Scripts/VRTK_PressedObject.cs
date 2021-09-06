@@ -257,7 +257,7 @@
             if (gameObject.GetComponent<NodeVariable>() != null)
             {
                 
-                if (CompareTag("ListPublikasiFakultas") || CompareTag("ListPublikasiKataKunci") || CompareTag("ListPenelitiInisial"))
+                if (CompareTag("ListPublikasiFakultas") || CompareTag("ListPublikasiKataKunci") || CompareTag("ListPenelitiInisial") || CompareTag("ListPenelitiDepartemenDetail") || CompareTag("ListGelarDetail") || CompareTag("ListKataKunciPeneliti")) 
                 {
                     Debug.Log("touch vrtk");
                     Manager.GetComponent<EventHandler>().peekNodePeneliti(gameObject, "publications");

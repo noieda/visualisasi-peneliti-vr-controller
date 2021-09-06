@@ -150,8 +150,14 @@
                     TBA = !TBA;
                     Manager.GetComponent<Manager>().TableButton.SetActive(TBA);
                 }
-                
-                
+                else if (name == "DestroyNodeButton")
+                {
+                    Debug.Log("navigation button");
+                    TBA = !TBA;
+                    Manager.GetComponent<Manager>().flushNode();
+                }
+
+
                 else if (name == "OptionButton")
                 {
                     Debug.Log("option button");
